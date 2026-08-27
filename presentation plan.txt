@@ -1,0 +1,487 @@
+================================================================================
+PRESENTATION PLAN
+TAS — Tensai Agentic Solution (SecureBank AIR)
+Duration: 7 to 10 minutes
+Presenter: Somesh Kumar
+Based on: Tensai_Agentic_Solution (1).pptx
+================================================================================
+
+
+--------------------------------------------------------------------------------
+HOW TO USE THIS PLAN
+--------------------------------------------------------------------------------
+- Speak in simple words. Do not read every bullet on the slide.
+- Use 1 easy example for each of the 3 problems.
+- Keep one main story: Detect → Diagnose → Ticket → Fix → Audit
+- Target timing: about 30–45 seconds per slide (some slides less, some more)
+- Leave 1 minute at the end for questions
+
+
+--------------------------------------------------------------------------------
+TOTAL TIME BREAKDOWN (10 minutes max)
+--------------------------------------------------------------------------------
+0:00 – 0:45   Opening + Title
+0:45 – 1:45   What we offer (Executive Summary)
+1:45 – 2:45   Problem Statement
+2:45 – 3:45   Our Solution
+3:45 – 4:30   What We Offer Table
+4:30 – 5:30   Architecture + How It Works (with example)
+5:30 – 6:15   Tech Stack + Simple UI
+6:15 – 7:00   KPIs + Security
+7:00 – 8:00   Implementation Plan + Phase 2
+8:00 – 8:45   Summary close
+8:45 – 10:00  Q&A buffer
+
+
+================================================================================
+SLIDE-BY-SLIDE SPEAKING SCRIPT (SIMPLE WORDS)
+================================================================================
+
+
+--------------------------------------------------------------------------------
+SLIDE 1 — TITLE (30–45 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Good morning / Good afternoon.
+My name is Somesh Kumar, and today I will present Tensai Agentic Solution —
+also called TAS or SecureBank AIR.
+
+In simple words, this is an intelligent incident response platform for
+digital banking.
+
+Today, tools like ELK can detect problems, and ServiceNow can track tickets.
+But someone still has to manually connect both and fix the issue.
+
+Our solution closes that gap:
+Detect → Diagnose → Ticket → Fix → Audit
+
+We build this on SecureBank, ELK/Kibana, ServiceNow, and Azure.
+Phase 1 is practical: 3 critical problems, a simple UI, and a real delivery path."
+
+Tip: Point to the flow line on the title slide while speaking.
+
+
+--------------------------------------------------------------------------------
+SLIDE 2 — EXECUTIVE SUMMARY (45–60 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Here is what we offer in one view.
+
+When SecureBank has issues like transfer failures, login spikes, or a service
+going down, our platform:
+1) finds the cause automatically,
+2) creates a ServiceNow ticket,
+3) and lets an engineer approve the fix in one click.
+
+We are not replacing existing tools.
+We use what is already there — ELK and ServiceNow — and add a smart Azure layer.
+
+Key targets:
+- MTTR down by about 70%
+- Manual work down by about 40%
+- Phase 1 scope: only 3 problems
+- Go-live in about 12 weeks
+
+UI stays simple: only 3 screens for NOC and SRE teams."
+
+
+--------------------------------------------------------------------------------
+SLIDE 3 — PROBLEM STATEMENT (60 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Why do we need this?
+
+Today:
+- ELK detects issues, but it cannot fix them.
+- Engineers jump between logs, dashboards, and tickets.
+- Same problems keep repeating — DB pool full, API errors, login spikes.
+- Fixing one incident often takes 45 to 90 minutes.
+- There is no clean audit trail from detection to resolution.
+
+Business impact:
+- Transfers/payments fail → customers suffer and SLA penalties rise.
+- Engineers waste time on repeat work → higher OpEx.
+- Security spikes are slow to handle → fraud risk.
+- Regulators want proof of every action, and manual reports take days.
+
+So the problem is not monitoring.
+The problem is the gap between seeing an issue and fixing it safely."
+
+
+--------------------------------------------------------------------------------
+SLIDE 4 — OUR SOLUTION (45–60 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Our solution is simple.
+
+Think of it like this:
+- ELK is the eyes (it sees the problem)
+- ServiceNow is the notebook (it tracks the work)
+- Tensai Agentic Solution is the hands (it helps fix the problem)
+
+Flow:
+Alert comes in → Agent analyzes ELK → Explains root cause → Creates SNOW ticket
+→ Recommends fix → Engineer approves → Fix runs → Audit is saved
+
+Important points:
+- Banking-safe: no customer PII in logs or agent output
+- High-risk actions need human approval
+- Phase 1 solves 3 problems; Phase 2 can add more without rebuilding
+- Portal is simple: see incident → read diagnosis → click Approve"
+
+
+--------------------------------------------------------------------------------
+SLIDE 5 — WHAT WE OFFER TABLE (40–45 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"This table shows exactly what we deliver.
+
+Phase 1:
+1. Auto Incident Triage — finds root cause fast from ELK alerts
+2. Smart SNOW Tickets — no more manual copy-paste
+3. Guided Remediation — one-click approved fix
+4. Security Response — handles login spikes
+5. Simple Ops Portal — list, detail, approve
+
+Phase 2:
+6. Extensible Platform — add more problems and tools later
+
+So Phase 1 is focused and useful.
+Phase 2 grows the same platform."
+
+
+--------------------------------------------------------------------------------
+SLIDE 6 — ARCHITECTURE (40–45 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"This is how we build it — in 5 clear layers.
+
+1) UI Layer — simple Ops Portal
+2) Agent Layer — triage, correlate, recommend, act, audit
+3) Orchestration — Azure Functions, Event Grid, Policy Engine
+4) Integration — ELK, ServiceNow, Teams
+5) SecureBank — banking app, DB, cache, safe telemetry
+
+Each layer is independent.
+That means we can add new agents or tools later without rebuilding everything."
+
+
+--------------------------------------------------------------------------------
+SLIDE 7 — HOW IT WORKS + MAIN EXAMPLE (75–90 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"This is the end-to-end flow.
+
+1. Kibana alert fires
+2. Webhook goes to Azure Function
+3. Agent checks ELK and finds root cause
+4. ServiceNow ticket is created automatically
+5. Engineer opens portal and clicks Approve
+6. Fix runs, ELK confirms recovery, ticket closes
+7. Audit log is saved
+
+MAIN EXAMPLE — Transfer Failure (use this as your hero story):
+
+Imagine customers cannot transfer money.
+
+Before our solution:
+- Engineer gets alert
+- Checks Kibana, logs, APM
+- Manually creates ServiceNow ticket
+- Calls DBA or restarts services
+- Takes about 75 minutes
+
+With Tensai Agentic Solution:
+- Alert: Transfer API errors high, DB pool 98%
+- Agent says: 'DB connection pool exhausted'
+- Ticket auto-created as SEV-2 for Banking SRE
+- Engineer clicks Approve
+- System increases pool and restarts pods
+- Transfers recover in about 12 minutes
+- Full audit trail is stored
+
+That is the value — same problem, much faster, safer, and documented."
+
+
+--------------------------------------------------------------------------------
+SLIDE 8 — TECHNOLOGY STACK (40 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Tech stack is practical and Azure-based.
+
+Core:
+- SecureBank on Azure DevOps / Azure
+- ELK Stack (existing)
+- ServiceNow Incident API
+- Azure Function/Web App for agent orchestration
+- Azure OpenAI / AI Foundry for agents and LLM summaries
+- Azure Event Grid for alert routing
+
+Supporting:
+- API Management, Key Vault, Entra ID
+- Blob Storage for audit
+- Teams for notifications
+- React UI on Azure Static Web Apps
+
+Simple chain:
+SecureBank → ELK → Azure Functions → ServiceNow → Ops Portal"
+
+
+--------------------------------------------------------------------------------
+SLIDE 9 — SIMPLE UI (30–40 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"UI is intentionally simple — only 3 screens.
+
+Screen 1: Incident List — open or resolved
+Screen 2: Incident Detail — what happened, root cause, recommended action
+Screen 3: Approve / Deny — one click
+
+Kibana stays for deep analysis.
+Our portal is only for action and tracking.
+No complex dashboards in Phase 1."
+
+
+--------------------------------------------------------------------------------
+SLIDE 10 — KPIs & BUSINESS IMPACT (40–45 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Business impact in numbers:
+
+- MTTR: from about 75 minutes to about 15 minutes
+- Auto-tickets: 100%
+- Manual toil reduction: about 40%
+- Availability target: 99.95%+
+
+Simple math:
+If we get 5 incidents per week and save 45 minutes each,
+that is about 4 hours of engineer time saved every week.
+
+Plus fewer SLA penalties and happier customers.
+And every action is audited from day one."
+
+
+--------------------------------------------------------------------------------
+SLIDE 11 — SECURITY & COMPLIANCE (35–40 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Security is non-negotiable for banking.
+
+We never log:
+- customer names, account numbers, card data
+- passwords, OTPs, balances
+- real payment amounts
+
+We stay safe by:
+- using only masked IDs, counts, latency, status codes
+- Entra ID role-based access
+- Key Vault for secrets
+- human approval for high-risk fixes
+- immutable audit logs
+
+So automation is helpful, but always controlled."
+
+
+--------------------------------------------------------------------------------
+SLIDE 12 — IMPLEMENTATION PLAN (45–50 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Delivery plan is 12 weeks.
+
+Week 1–3: Deploy SecureBank
+Week 4–6: Connect ELK alerts via webhooks
+Week 7–9: ServiceNow API + 3 playbooks
+Week 10–12: Simple UI + end-to-end demo
+
+At week 12, we demo all 3 problems live:
+detect → ticket → approve → fix → audit
+
+Team needed:
+- 1 GenAI developer
+- 1 backend developer
+- 1 frontend developer
+- 1 DevOps/SRE (part-time)
+- 1 integration expert
+- Plus ELK and ServiceNow access"
+
+
+--------------------------------------------------------------------------------
+SLIDE 13 — PHASE 2 (30 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"Phase 2 is future growth on the same platform.
+
+Now: 3 problems, ELK + SNOW + Azure, simple UI
+Next: latency alerts, change intelligence, capacity ops
+Future: compliance automation, more tool adapters, executive KPIs
+
+We do not rebuild.
+We only add new playbooks and screens."
+
+
+--------------------------------------------------------------------------------
+SLIDE 14 — SUMMARY + CLOSE (40–45 seconds)
+--------------------------------------------------------------------------------
+What to say:
+
+"To close in one line:
+
+WHAT: Tensai Agentic Solution connects ELK, ServiceNow, and Azure to diagnose
+and fix SecureBank incidents.
+
+WHY: Faster recovery, less manual work, better availability, full audit.
+
+WHO: NOC, SRE, and SecOps teams.
+
+HOW: Alert → Agent → Ticket → Approve → Fix → Audit
+
+WHEN: Phase 1 in about 12 weeks.
+
+NEXT: Extend to more use cases in Phase 2.
+
+Thank you. I am happy to take questions."
+
+
+================================================================================
+EASY EXAMPLES TO USE WHILE PRESENTING
+================================================================================
+
+Use these if someone asks "Give one example" or if you have extra time.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 1 — TRANSFER FAILURE (MAIN EXAMPLE)
+--------------------------------------------------------------------------------
+Situation:
+Customers try to transfer money, but transfers start failing.
+
+What ELK sees:
+- Transfer API error rate high (5xx)
+- Database connection pool almost full (98%)
+
+What TAS does:
+1. Detects the alert
+2. Diagnoses: "DB connection pool is exhausted"
+3. Creates ServiceNow SEV-2 ticket for Banking SRE
+4. Shows recommended fix in portal: increase pool + restart pods
+5. Engineer clicks Approve
+6. Fix runs automatically
+7. Transfers start working again
+8. Ticket closes and audit is saved
+
+Time:
+- Before: ~75 minutes
+- After: ~12 minutes
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 2 — LOGIN / SECURITY SPIKE
+--------------------------------------------------------------------------------
+Situation:
+Suddenly many failed login attempts appear — maybe an attack or bad bot traffic.
+
+What ELK sees:
+- Failed login rate is 10x normal
+
+What TAS does:
+1. Detects the spike
+2. Marks it as a security-related incident
+3. Creates ServiceNow ticket for SecOps
+4. Sends Teams notification
+5. Shows plain-English summary in portal
+6. Engineer reviews and takes next action (or approves guided response)
+
+Why this matters:
+Security issues need speed. Manual ticket creation wastes critical minutes.
+
+
+--------------------------------------------------------------------------------
+EXAMPLE 3 — SERVICE UNAVAILABLE
+--------------------------------------------------------------------------------
+Situation:
+Login service or one banking API goes down. Users cannot access the app.
+
+What ELK sees:
+- Health check fails / service unavailable alert
+
+What TAS does:
+1. Detects service down
+2. Creates SEV-1 ServiceNow ticket
+3. Recommends restart of the service pod
+4. Engineer clicks Approve
+5. Service restarts on Azure
+6. Service recovers, ticket updates, audit saved
+
+Why this matters:
+This is a clear, low-complexity, high-impact automation case.
+
+
+================================================================================
+ONE 60-SECOND STORY (IF TIME IS SHORT)
+================================================================================
+If you only get 1 minute, say this:
+
+"Today ELK can see banking incidents, but engineers still manually diagnose,
+create ServiceNow tickets, and fix issues. That takes 45 to 90 minutes.
+
+Tensai Agentic Solution connects ELK, ServiceNow, and Azure.
+When transfer fails due to DB pool exhaustion, the agent finds the cause,
+creates the ticket, and lets the engineer approve the fix in one click.
+Recovery drops from about 75 minutes to about 12 minutes.
+
+Phase 1 covers 3 problems in 12 weeks with a simple 3-screen UI.
+Phase 2 can extend to more use cases on the same platform."
+
+
+================================================================================
+LIKELY QUESTIONS + SHORT ANSWERS
+================================================================================
+
+Q1: Are you replacing ELK or ServiceNow?
+A: No. We use both. We only add the automation layer between them.
+
+Q2: Is this fully automatic?
+A: Not for high-risk actions. Engineer approval is required for fixes like
+   pod restart or DB pool scaling.
+
+Q3: Is customer data safe?
+A: Yes. We do not log PII, account numbers, passwords, OTPs, or balances.
+
+Q4: Why only 3 problems in Phase 1?
+A: To deliver real value fast, prove the model, then extend safely in Phase 2.
+
+Q5: How long to deliver?
+A: About 12 weeks for Phase 1 end-to-end demo.
+
+Q6: Who will use the UI?
+A: NOC, SRE, and SecOps teams. Only 3 screens — list, detail, approve.
+
+
+================================================================================
+PRESENTATION TIPS
+================================================================================
+1. Speak slowly and clearly. Prefer short sentences.
+2. Always bring the audience back to one line:
+   Detect → Diagnose → Ticket → Fix → Audit
+3. Use the Transfer Failure example as your main story.
+4. When showing architecture, do not go deep into every Azure service.
+5. When showing KPIs, stress time saved and audit quality.
+6. End with confidence: Phase 1 is feasible, useful, and extendable.
+
+
+================================================================================
+END OF PRESENTATION PLAN
+================================================================================
