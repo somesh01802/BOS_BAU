@@ -1,0 +1,649 @@
+watchers:
+
+  - name: server_p2
+    group_name: filesystem_utilization
+    state: active
+    type: problem
+    remarks: Alert when filesystem utilization exceeds p2 Threshold
+    index: watcher-metrics
+    elasticsearch_query:
+      size: 0
+      query:
+        bool:
+          must:
+            - terms:
+                metricset.name:
+                  - filesystem
+            - term:
+                hex_alerting:
+                  value: 'yes'
+            - range:
+                '@timestamp':
+                  gte: now-15m
+                  lte: now
+                  format: strict_date_optional_time||epoch_millis
+          must_not:
+            - term:
+                hex_hostname_filesystem: 'hc1dbsq55pv-filesystem-E:\'
+      aggregations:
+        hex_buckets:
+          terms:
+            field: hex_hostname
+            size: 1500
+          aggregations:
+            hex_buckets_1:
+              terms:
+                field: system.filesystem.mount_point
+                size: 1000
+                min_doc_count: 1
+              aggregations:
+                check_docs:
+                  bucket_selector:
+                    buckets_path:
+                      doc_count: _count
+                    script: params.doc_count > 0
+                hex_metric_disk_used_pct:
+                  avg:
+                    field: system.filesystem.used.pct
+                    script:
+                      lang: painless
+                      source: _value * 100
+                hex_metric_filesystem_free:
+                  avg:
+                    field: system.filesystem.free
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_total:
+                  avg:
+                    field: system.filesystem.total
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_used_bytes:
+                  avg:
+                    field: system.filesystem.used.bytes
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_type:
+                  terms:
+                    field: system.filesystem.type
+                    size: 10
+                hex_metric_filesystem_device_name:
+                  terms:
+                    field: system.filesystem.device_name
+                    size: 10
+                P2_threshold:
+                  filter:
+                    term:
+                      metricset.name: filesystem
+                  aggs:
+                    threshold:
+                      avg:
+                        field: p2_threshold
+                hex_bucket_selector:
+                  bucket_selector:
+                    buckets_path:
+                      hex_metric_selector: hex_metric_disk_used_pct
+                      p2_threshold: P2_threshold.threshold
+                    script: params.hex_metric_selector >= params.p2_threshold
+            check_hex_buckets_1:
+              bucket_selector:
+                buckets_path:
+                  hex_buckets_1_count: hex_buckets_1._bucket_count
+                script: params.hex_buckets_1_count > 0
+    response_path:
+      - aggregations
+      - hex_buckets
+      - buckets
+    flatten_list_path:
+      - hex_buckets_1
+      - buckets
+    new_fields:
+      hex_severity: High
+      hex_impact: High
+      hex_urgency: Medium
+      hex_id: '{{alert_type}}-{{top_key}}|{{key}}'
+      hex_sourcehost: '{{top_key}}'
+      hex_enrichmentkey: '{{top_key}}-{{alert_type}}'
+      filesystem_enrichmentkey: '{{top_key}}-{{alert_type}}-{{key}}'
+      hex_alerttext: 'Host: {{top_key}} IP: host.ip Mount Point: {{key}} File Utilization at {{(hex_metric_disk_used_pct.value)|round(1)}}%'
+      destination_index: alerts-index
+      hex_tickettype: problem
+      alert_type: filesystem
+      hex_email_sent: 'None'
+      hex_sourcetool: my_watcher
+      hex_alert_mode: Ticket
+      hex_description: |
+        The mount point "{{ key }}" on host "{{ top_key }}" is currently using {{ (hex_metric_disk_used_pct.value) | round(1) }}% of the filesystem space.
+
+        Additional Insights:
+
+        - Device Name: {{ hex_metric_filesystem_device_name.buckets[0].key }}
+        - Filesystem Type: {{ hex_metric_filesystem_type.buckets[0].key }}
+        - Free Space: {{ (hex_metric_filesystem_free.value) | round(1) }} MB
+        - Total Space: {{ (hex_metric_filesystem_total.value) | round(1) }} MB
+        - Used Space: {{ (hex_metric_filesystem_used_bytes.value) | round(1) }} MB
+
+        Monitoring is required to ensure that the filesystem usage does not exceed the threshold, potentially leading to performance degradation or service disruption.
+
+
+  - name: server_p3
+    group_name: filesystem_utilization
+    state: active
+    type: problem
+    remarks: Alert when filesystem utilization exceeds p3 Threshold
+    index: watcher-metrics
+    elasticsearch_query:
+      size: 0
+      query:
+        bool:
+          must:
+            - terms:
+                metricset.name:
+                  - filesystem
+            - term:
+                hex_alerting:
+                  value: 'yes'
+            - range:
+                '@timestamp':
+                  gte: now-15m
+                  lte: now
+                  format: strict_date_optional_time||epoch_millis
+          must_not:
+            - term:
+                hex_hostname_filesystem: 'hc1dbsq55pv-filesystem-E:\'
+      aggregations:
+        hex_buckets:
+          terms:
+            field: hex_hostname
+            size: 1500
+          aggregations:
+            hex_buckets_1:
+              terms:
+                field: system.filesystem.mount_point
+                size: 1000
+                min_doc_count: 1
+              aggregations:
+                check_docs:
+                  bucket_selector:
+                    buckets_path:
+                      doc_count: _count
+                    script: params.doc_count > 0
+                hex_metric_disk_used_pct:
+                  avg:
+                    field: system.filesystem.used.pct
+                    script:
+                      lang: painless
+                      source: _value * 100
+                hex_metric_filesystem_free:
+                  avg:
+                    field: system.filesystem.free
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_total:
+                  avg:
+                    field: system.filesystem.total
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_used_bytes:
+                  avg:
+                    field: system.filesystem.used.bytes
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_type:
+                  terms:
+                    field: system.filesystem.type
+                    size: 10
+                hex_metric_filesystem_device_name:
+                  terms:
+                    field: system.filesystem.device_name
+                    size: 10
+                P3_threshold:
+                  filter:
+                    term:
+                      metricset.name: filesystem
+                  aggs:
+                    threshold:
+                      avg:
+                        field: p3_threshold
+                hex_bucket_selector:
+                  bucket_selector:
+                    buckets_path:
+                      hex_metric_selector: hex_metric_disk_used_pct
+                      p3_threshold: P3_threshold.threshold
+                    script: params.hex_metric_selector >= params.p3_threshold
+            check_hex_buckets_1:
+              bucket_selector:
+                buckets_path:
+                  hex_buckets_1_count: hex_buckets_1._bucket_count
+                script: params.hex_buckets_1_count > 0
+    response_path:
+      - aggregations
+      - hex_buckets
+      - buckets
+    flatten_list_path:
+      - hex_buckets_1
+      - buckets
+    new_fields:
+      hex_severity: Moderate
+      hex_impact: Medium
+      hex_urgency: Medium
+      hex_id: '{{alert_type}}-{{top_key}}|{{key}}'
+      hex_sourcehost: '{{top_key}}'
+      hex_enrichmentkey: '{{top_key}}-{{alert_type}}'
+      filesystem_enrichmentkey: '{{top_key}}-{{alert_type}}-{{key}}'
+      hex_alerttext: 'Host: {{top_key}} IP: host.ip Mount Point: {{key}} File Utilization at {{(hex_metric_disk_used_pct.value)|round(1)}}%'
+      destination_index: alerts-index
+      hex_tickettype: problem
+      alert_type: filesystem
+      hex_email_sent: 'None'
+      hex_sourcetool: my_watcher
+      hex_alert_mode: Ticket
+      hex_description: |
+        The mount point "{{ key }}" on host "{{ top_key }}" is currently using {{ (hex_metric_disk_used_pct.value) | round(1) }}% of the filesystem space.
+
+        Additional Insights:
+
+        - Device Name: {{ hex_metric_filesystem_device_name.buckets[0].key }}
+        - Filesystem Type: {{ hex_metric_filesystem_type.buckets[0].key }}
+        - Free Space: {{ (hex_metric_filesystem_free.value) | round(1) }} MB
+        - Total Space: {{ (hex_metric_filesystem_total.value) | round(1) }} MB
+        - Used Space: {{ (hex_metric_filesystem_used_bytes.value) | round(1) }} MB
+
+        Monitoring is required to ensure that the filesystem usage does not exceed the threshold, potentially leading to performance degradation or service disruption.
+
+
+  - name: server_p4
+    group_name: filesystem_utilization
+    state: active
+    type: problem
+    remarks: Alert when filesystem utilization exceeds p4 Threshold
+    index: watcher-metrics
+    elasticsearch_query:
+      size: 0
+      query:
+        bool:
+          must:
+            - terms:
+                metricset.name:
+                  - filesystem
+            - term:
+                hex_alerting:
+                  value: 'yes'
+            - range:
+                '@timestamp':
+                  gte: now-15m
+                  lte: now
+                  format: strict_date_optional_time||epoch_millis
+          must_not:
+            - term:
+                hex_hostname_filesystem: 'hc1dbsq55pv-filesystem-E:\'
+      aggregations:
+        hex_buckets:
+          terms:
+            field: hex_hostname
+            size: 1500
+          aggregations:
+            hex_buckets_1:
+              terms:
+                field: system.filesystem.mount_point
+                size: 1000
+                min_doc_count: 1
+              aggregations:
+                check_docs:
+                  bucket_selector:
+                    buckets_path:
+                      doc_count: _count
+                    script: params.doc_count > 0
+                hex_metric_disk_used_pct:
+                  avg:
+                    field: system.filesystem.used.pct
+                    script:
+                      lang: painless
+                      source: _value * 100
+                hex_metric_filesystem_free:
+                  avg:
+                    field: system.filesystem.free
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_total:
+                  avg:
+                    field: system.filesystem.total
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_used_bytes:
+                  avg:
+                    field: system.filesystem.used.bytes
+                    script:
+                      lang: painless
+                      source: _value / 1048576
+                hex_metric_filesystem_type:
+                  terms:
+                    field: system.filesystem.type
+                    size: 10
+                hex_metric_filesystem_device_name:
+                  terms:
+                    field: system.filesystem.device_name
+                    size: 10
+                P4_threshold:
+                  filter:
+                    term:
+                      metricset.name: filesystem
+                  aggs:
+                    threshold:
+                      avg:
+                        field: p4_threshold
+                hex_bucket_selector:
+                  bucket_selector:
+                    buckets_path:
+                      hex_metric_selector: hex_metric_disk_used_pct
+                      p4_threshold: P4_threshold.threshold
+                    script: params.hex_metric_selector >= params.p4_threshold
+            check_hex_buckets_1:
+              bucket_selector:
+                buckets_path:
+                  hex_buckets_1_count: hex_buckets_1._bucket_count
+                script: params.hex_buckets_1_count > 0
+    response_path:
+      - aggregations
+      - hex_buckets
+      - buckets
+    flatten_list_path:
+      - hex_buckets_1
+      - buckets
+    new_fields:
+      hex_severity: Low
+      hex_impact: Medium
+      hex_urgency: Low
+      hex_id: '{{alert_type}}-{{top_key}}|{{key}}'
+      hex_sourcehost: '{{top_key}}'
+      hex_enrichmentkey: '{{top_key}}-{{alert_type}}'
+      filesystem_enrichmentkey: '{{top_key}}-{{alert_type}}-{{key}}'
+      hex_alerttext: 'Host: {{top_key}} IP: host.ip Mount Point: {{key}} File Utilization at {{(hex_metric_disk_used_pct.value)|round(1)}}%'
+      destination_index: alerts-index
+      hex_tickettype: problem
+      alert_type: filesystem
+      hex_email_sent: 'None'
+      hex_sourcetool: my_watcher
+      hex_alert_mode: Ticket
+      hex_description: |
+        The mount point "{{ key }}" on host "{{ top_key }}" is currently using {{ (hex_metric_disk_used_pct.value) | round(1) }}% of the filesystem space.
+
+        Additional Insights:
+
+        - Device Name: {{ hex_metric_filesystem_device_name.buckets[0].key }}
+        - Filesystem Type: {{ hex_metric_filesystem_type.buckets[0].key }}
+        - Free Space: {{ (hex_metric_filesystem_free.value) | round(1) }} MB
+        - Total Space: {{ (hex_metric_filesystem_total.value) | round(1) }} MB
+        - Used Space: {{ (hex_metric_filesystem_used_bytes.value) | round(1) }} MB
+
+        Monitoring is required to ensure that the filesystem usage does not exceed the threshold, potentially leading to performance degradation or service disruption.
+
+
+  - name: server_resolution
+    group_name: filesystem_utilization
+    state: active
+    type: resolution
+    remarks: Alert when filesystem utilization deceeds alert threshold
+    index: watcher-metrics
+    elasticsearch_query:
+      size: 0
+      query:
+        bool:
+          must:
+            - terms:
+                metricset.name:
+                  - filesystem
+            - term:
+                hex_alerting:
+                  value: 'yes'
+          filter:
+            range:
+              '@timestamp':
+                gte: now-15m
+                lte: now
+                format: strict_date_optional_time||epoch_millis
+          must_not:
+            - term:
+                hex_hostname_filesystem: 'hc1dbsq55pv-filesystem-E:\'
+      aggregations:
+        hex_buckets:
+          terms:
+            field: hex_hostname
+            size: 1500
+          aggregations:
+            hex_buckets_1:
+              terms:
+                field: system.filesystem.mount_point
+                size: 1000
+                min_doc_count: 1
+              aggregations:
+                check_docs:
+                  bucket_selector:
+                    buckets_path:
+                      doc_count: _count
+                    script: params.doc_count > 0
+                hex_metric_disk_used_pct:
+                  avg:
+                    field: system.filesystem.used.pct
+                    script:
+                      lang: painless
+                      source: _value * 100
+                P4_threshold:
+                  filter:
+                    term:
+                      metricset.name: filesystem
+                  aggs:
+                    threshold:
+                      avg:
+                        field: p4_threshold
+                hex_bucket_selector:
+                  bucket_selector:
+                    buckets_path:
+                      hex_metric_selector: hex_metric_disk_used_pct
+                      p4_threshold: P4_threshold.threshold
+                    script: params.hex_metric_selector < params.p4_threshold
+    response_path:
+      - aggregations
+      - hex_buckets
+      - buckets
+    flatten_list_path:
+      - hex_buckets_1
+      - buckets
+    new_fields:
+      hex_severity: clear
+      hex_impact: Medium
+      hex_urgency: Low
+      hex_id: '{{alert_type}}-{{top_key}}|{{key}}'
+      hex_sourcehost: '{{top_key}}'
+      hex_enrichmentkey: '{{top_key}}-{{alert_type}}'
+      filesystem_enrichmentkey: '{{top_key}}-{{alert_type}}-{{key}}'
+      hex_alerttext: 'Host: {{top_key}} IP: host.ip Mount Point: {{key}} Utilization at {{(hex_metric_disk_used_pct.value)|round(1)}}%'
+      destination_index: alerts-index
+      hex_tickettype: resolution
+      alert_type: filesystem
+      hex_email_sent: 'None'
+      hex_sourcetool: my_watcher
+      hex_alert_mode: Ticket
+
+
+  - name: server_resolution
+    group_name: filesystem_utilization
+    state: active
+    type: resolution
+    remarks: Alert when filesystem utilization deceeds alert threshold
+    index: watcher-metrics
+    elasticsearch_query:
+      size: 0
+      query:
+        bool:
+          must:
+            - terms:
+                metricset.name:
+                  - filesystem
+            - term:
+                hex_alerting:
+                  value: 'yes'
+          filter:
+            range:
+              '@timestamp':
+                gte: now-15m
+                lte: now
+                format: strict_date_optional_time||epoch_millis
+          must_not:
+            - term:
+                hex_hostname_filesystem: 'hc1dbsq55pv-filesystem-E:\'
+      aggregations:
+        hex_buckets:
+          terms:
+            field: hex_hostname
+            size: 1500
+          aggregations:
+            hex_buckets_1:
+              terms:
+                field: system.filesystem.mount_point
+                size: 1000
+                min_doc_count: 1
+              aggregations:
+                check_docs:
+                  bucket_selector:
+                    buckets_path:
+                      doc_count: _count
+                    script: params.doc_count > 0
+                hex_metric_disk_used_pct:
+                  avg:
+                    field: system.filesystem.used.pct
+                    script:
+                      lang: painless
+                      source: _value * 100
+                P3_threshold:
+                  filter:
+                    term:
+                      metricset.name: filesystem
+                  aggs:
+                    threshold:
+                      avg:
+                        field: p3_threshold
+                hex_bucket_selector:
+                  bucket_selector:
+                    buckets_path:
+                      hex_metric_selector: hex_metric_disk_used_pct
+                      p3_threshold: P3_threshold.threshold
+                    script: params.hex_metric_selector < params.p3_threshold
+    response_path:
+      - aggregations
+      - hex_buckets
+      - buckets
+    flatten_list_path:
+      - hex_buckets_1
+      - buckets
+    new_fields:
+      hex_severity: clear
+      hex_impact: Medium
+      hex_urgency: Medium
+      hex_id: '{{alert_type}}-{{top_key}}|{{key}}'
+      hex_sourcehost: '{{top_key}}'
+      hex_enrichmentkey: '{{top_key}}-{{alert_type}}'
+      filesystem_enrichmentkey: '{{top_key}}-{{alert_type}}-{{key}}'
+      hex_alerttext: 'Host: {{top_key}} IP: host.ip Mount Point: {{key}} Utilization at {{(hex_metric_disk_used_pct.value)|round(1)}}%'
+      destination_index: alerts-index
+      hex_tickettype: resolution
+      alert_type: filesystem
+      hex_email_sent: 'None'
+      hex_sourcetool: my_watcher
+      hex_alert_mode: Ticket
+
+
+  - name: server_resolution
+    group_name: filesystem_utilization
+    state: active
+    type: resolution
+    remarks: Alert when filesystem utilization deceeds alert threshold
+    index: watcher-metrics
+    elasticsearch_query:
+      size: 0
+      query:
+        bool:
+          must:
+            - terms:
+                metricset.name:
+                  - filesystem
+            - term:
+                hex_alerting:
+                  value: 'yes'
+          filter:
+            range:
+              '@timestamp':
+                gte: now-15m
+                lte: now
+                format: strict_date_optional_time||epoch_millis
+          must_not:
+            - term:
+                hex_hostname_filesystem: 'hc1dbsq55pv-filesystem-E:\'
+      aggregations:
+        hex_buckets:
+          terms:
+            field: hex_hostname
+            size: 1500
+          aggregations:
+            hex_buckets_1:
+              terms:
+                field: system.filesystem.mount_point
+                size: 1000
+                min_doc_count: 1
+              aggregations:
+                check_docs:
+                  bucket_selector:
+                    buckets_path:
+                      doc_count: _count
+                    script: params.doc_count > 0
+                hex_metric_disk_used_pct:
+                  avg:
+                    field: system.filesystem.used.pct
+                    script:
+                      lang: painless
+                      source: _value * 100
+                P2_threshold:
+                  filter:
+                    term:
+                      metricset.name: filesystem
+                  aggs:
+                    threshold:
+                      avg:
+                        field: p2_threshold
+                hex_bucket_selector:
+                  bucket_selector:
+                    buckets_path:
+                      hex_metric_selector: hex_metric_disk_used_pct
+                      p2_threshold: P2_threshold.threshold
+                    script: params.hex_metric_selector < params.p2_threshold
+    response_path:
+      - aggregations
+      - hex_buckets
+      - buckets
+    flatten_list_path:
+      - hex_buckets_1
+      - buckets
+    new_fields:
+      hex_severity: clear
+      hex_impact: High
+      hex_urgency: Medium
+      hex_id: '{{alert_type}}-{{top_key}}|{{key}}'
+      hex_sourcehost: '{{top_key}}'
+      hex_enrichmentkey: '{{top_key}}-{{alert_type}}'
+      filesystem_enrichmentkey: '{{top_key}}-{{alert_type}}-{{key}}'
+      hex_alerttext: 'Host: {{top_key}} IP: host.ip Mount Point: {{key}} Utilization at {{(hex_metric_disk_used_pct.value)|round(1)}}%'
+      destination_index: alerts-index
+      hex_tickettype: resolution
+      alert_type: filesystem
+      hex_email_sent: 'None'
+      hex_sourcetool: my_watcher
+      hex_alert_mode: Ticket
+```
