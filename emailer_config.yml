@@ -1,0 +1,13 @@
+ElasticSearch:
+  host: https://bos-56cef9.es.us-east-2.aws.elastic-cloud.com
+  port: 443
+  username: elastic
+  password: mr0gbVe6g3ZHK2tIHKoiDWI6
+  alerts_index: alerts-index
+  alerts_archive_index: alerts-archive-index 
+  header : {"Content-Type": "application/json"}
+
+SMTPINFO:
+  host: email.banksyd.com.au
+  port: 25
+  sender : ELK@banksyd.com.au
